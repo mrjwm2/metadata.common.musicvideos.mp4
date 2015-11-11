@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<scraperfunctions>
+  <GetMBArtistWikiInfoByMBID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseMBArtistWikiInfo&quot; cache=&quot;mp4-\1-artistinfo.xml&quot;&gt;http://musicbrainz.org/artist/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" input="$$1">
+      <expression noclean="1" />
+    </RegExp>
+  </GetMBArtistWikiInfoByMBID>
+  <ParseMBArtistWikiInfo dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$12">
+      <RegExp dest="12" output="&lt;plot&gt;\2&lt;/plot&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;h2 class="wikipedia"&gt;([^(]*)&lt;b&gt;(....*)</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseMBArtistWikiInfo>
+  <GetMBWorkWikiInfoByMBID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseMBWorkWikiInfo&quot; cache=&quot;mp4-\1-workinfo.xml&quot;&gt;http://musicbrainz-mirror.eu:5000/work/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" input="$$1">
+      <expression noclean="1" />
+    </RegExp>
+  </GetMBWorkWikiInfoByMBID>
+  <ParseMBWorkWikiInfo dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$13">
+      <RegExp dest="13" output="&lt;plot&gt;\2&lt;/plot&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;h2 class="wikipedia"&gt;([^(]*)&lt;/h2&gt;(....*)</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseMBWorkWikiInfo>
+  <GetTADBDirectorByMBID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseTADBDirectorInfo&quot; cache=&quot;mp4-\1-TADB.xml&quot;&gt;http://www.theaudiodb.com/api/v1/json/1635249876521398675129/track-mb.php?i=\1&lt;/url&gt;&lt;/details&gt;" input="$$1">
+      <expression noclean="1" />
+    </RegExp>
+  </GetTADBDirectorByMBID>
+  <ParseTADBDirectorInfo dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$13">
+      <RegExp dest="13+" output="&lt;genre&gt;\1&lt;/genre&gt;" input="$$1">
+        <expression noclean="1" trim="1">"strGenre":"([^(]*?)"</expression>
+      </RegExp>
+      <RegExp dest="13+" output="&lt;director&gt;\1&lt;/director&gt;" input="$$1">
+        <expression noclean="1" trim="1">"strMusicVidDirector":"([^(]*?)"</expression>
+      </RegExp>
+      <RegExp dest="13+" output="&lt;track&gt;\1&lt;/track&gt;" input="$$1">
+        <expression noclean="1" trim="1">"intTrackNumber":"(.*?)","</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseTADBDirectorInfo>
+</scraperfunctions>
