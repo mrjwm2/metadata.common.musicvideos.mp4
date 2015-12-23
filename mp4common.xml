@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <scraperfunctions>
   <GetMBArtistWikiInfoByMBID dest="8" clearbuffers="no">
-    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseMBArtistWikiInfo&quot; cache=&quot;mp4-\1-artistinfo.xml&quot;&gt;http://musicbrainz.org/artist/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" input="$$1">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseMBArtistWikiInfo&quot; cache=&quot;mp4-\1-artistinfo.txt&quot;&gt;http://musicbrainz.org/artist/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" input="$$1">
       <expression noclean="1" />
     </RegExp>
   </GetMBArtistWikiInfoByMBID>
@@ -14,7 +14,7 @@
     </RegExp>
   </ParseMBArtistWikiInfo>
   <GetMBWorkWikiInfoByMBID dest="8" clearbuffers="no">
-    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseMBWorkWikiInfo&quot; cache=&quot;mp4-\1-workinfo.xml&quot;&gt;http://musicbrainz-mirror.eu:5000/work/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" input="$$1">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseMBWorkWikiInfo&quot; cache=&quot;mp4-\1-workinfo.txt&quot;&gt;http://musicbrainz.org/work/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" input="$$1">
       <expression noclean="1" />
     </RegExp>
   </GetMBWorkWikiInfoByMBID>
@@ -27,22 +27,116 @@
     </RegExp>
   </ParseMBWorkWikiInfo>
   <GetTADBDirectorByMBID dest="8" clearbuffers="no">
-    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseTADBDirectorInfo&quot; cache=&quot;mp4-\1-TADB.xml&quot;&gt;http://www.theaudiodb.com/api/v1/json/1635249876521398675129/track-mb.php?i=\1&lt;/url&gt;&lt;/details&gt;" input="$$1">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseTADBDirectorInfo&quot; cache=&quot;mp4-\1-TADB.txt&quot;&gt;http://www.theaudiodb.com/api/v1/json/1635249876521398675129/track-mb.php?i=\1&lt;/url&gt;&lt;/details&gt;" input="$$1">
       <expression noclean="1" />
     </RegExp>
   </GetTADBDirectorByMBID>
   <ParseTADBDirectorInfo dest="5" clearbuffers="no">
-    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$13">
-      <RegExp dest="13+" output="&lt;genre&gt;\1&lt;/genre&gt;" input="$$1">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$14">
+      <RegExp dest="14+" output="&lt;genre&gt;\1&lt;/genre&gt;" input="$$1">
         <expression noclean="1" trim="1">"strGenre":"([^(]*?)"</expression>
       </RegExp>
-      <RegExp dest="13+" output="&lt;director&gt;\1&lt;/director&gt;" input="$$1">
+      <RegExp dest="14+" output="&lt;director&gt;\1&lt;/director&gt;" input="$$1">
         <expression noclean="1" trim="1">"strMusicVidDirector":"([^(]*?)"</expression>
       </RegExp>
-      <RegExp dest="13+" output="&lt;track&gt;\1&lt;/track&gt;" input="$$1">
+      <RegExp dest="14+" output="&lt;track&gt;\1&lt;/track&gt;" input="$$1">
         <expression noclean="1" trim="1">"intTrackNumber":"(.*?)","</expression>
       </RegExp>
       <expression noclean="1">(.+)</expression>
     </RegExp>
   </ParseTADBDirectorInfo>
+  <GetFanartvAlbumThumbByMBID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseFanartvAlbumThumb&quot; cache=&quot;mp4-\1-albumthumb.json&quot;&gt;http://webservice.fanart.tv/v3/music/albums/\1?api_key=71641ead1c83919f412f459e81fb4caa&lt;/url&gt;&lt;/details&gt;" input="$$1">
+      <expression noclean="1" />
+    </RegExp>
+  </GetFanartvAlbumThumbByMBID>
+  <ParseFanartvAlbumThumb dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$15">
+      <RegExp dest="15" output="&lt;thumb&gt;\1\2\3\4\5&lt;/thumb&gt;" input="$$1">
+        <expression noclean="1" trim="1">(http://assets.fanart.tv/fanart/music/)([^"]*/)(albumcover/)([^"]*)(\.[^"]*)</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseFanartvAlbumThumb>
+  <GetAlbumInfobyRID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseInfobyRID&quot; cache=&quot;mp4-\1-title.xml&quot;&gt;http://musicbrainz.org/ws/2/recording/\1?inc=work-rels+artists&amp;amp;fmt=xml&lt;/url&gt;&lt;/details&gt;" input="$$1">
+      <expression noclean="1" />
+    </RegExp>
+  </GetAlbumInfobyRID>
+  <ParseInfobyRID dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$16">
+      <RegExp dest="16+" output="&lt;title&gt;\1&lt;/title&gt;&lt;runtime&gt;\2&lt;/runtime&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;title&gt;(.+)&lt;/title&gt;&lt;length&gt;(.+)&lt;/length&gt;</expression>
+      </RegExp>
+      <RegExp dest="16+" output="&lt;artist&gt;\1&lt;/artist&gt;" input="$$1">
+        <expression noclean="1" trim="1">(?:&lt;artist id="[^&lt;]*)"&gt;&lt;name&gt;([^&lt;]*)&lt;/name&gt;</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseInfobyRID>
+  <GetAlbumInfobyREID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseInfobyREID&quot; cache=&quot;mp4-\1-reid.xml&quot;&gt;http://musicbrainz.org/ws/2/release/\1?inc=release-groups+labels&amp;amp;fmt=xml&lt;/url&gt;&lt;/details&gt;" input="$$4">
+      <expression noclean="1" />
+    </RegExp>
+  </GetAlbumInfobyREID>
+  <ParseInfobyREID dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$17">
+      <RegExp dest="17+" output="&lt;album&gt;\1&lt;/album&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;title&gt;([^"]*)&lt;/title&gt;</expression>
+      </RegExp>
+      <RegExp dest="17+" output="&lt;studio&gt;\1&lt;/studio&gt;" input="$$1">
+        <expression noclean="1" trim="1">(?:&lt;label id="[^"]*)"&gt;&lt;name&gt;([^&lt;]*)&lt;/name&gt;</expression>
+      </RegExp>
+      <RegExp dest="17+" output="&lt;year&gt;\1&lt;/year&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;release-event&gt;&lt;date&gt;(\d{4})[^&lt;]*&lt;/date&gt;</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseInfobyREID>
+  <GetMBWorkID dest="8" clearbuffers="no">
+    <RegExp input="$$1" output="&lt;details&gt;&lt;url function=&quot;ParseInfobyWorkID&quot; cache=&quot;mb-\1-workinfo.xml&quot;&gt;http://musicbrainz.org/work/\1/wikipedia-extract&lt;/url&gt;&lt;/details&gt;" dest="8">
+      <expression noclean="1">&lt;work id="([^&lt;]*)"&gt;</expression>
+    </RegExp>
+  </GetMBWorkID>
+  <ParseInfobyWorkID dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$19">
+      <RegExp dest="19" output="&lt;plot&gt;\2&lt;/plot&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;h2 class="wikipedia"&gt;([^(]*)&lt;/h2&gt;(....*)</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseInfobyWorkID>
+  <GetFanartvThumbbyMBrgid dest="8" clearbuffers="no">
+    <RegExp input="$$6" output="&lt;details&gt;&lt;url function=&quot;ParseFanartvThumb&quot; cache=&quot;mb-\1-fanartvthumb.xml&quot;&gt;http://webservice.fanart.tv/v3/music/albums/\1?api_key=71641ead1c83919f412f459e81fb4caa&lt;/url&gt;&lt;/details&gt;" dest="8">
+      <RegExp input="$$1" output="\1" dest="6">
+        <expression noclean="1">&lt;release-group id="([^"]*)"</expression>
+      </RegExp>
+    </RegExp>
+  </GetFanartvThumbbyMBrgid>
+  <ParseFanartvThumb dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$18">
+      <RegExp dest="18" output="&lt;thumb&gt;\1\2\3\4\5&lt;/thumb&gt;" input="$$1">
+        <expression noclean="1" trim="1">(http://assets.fanart.tv/fanart/music/)([^"]*/)(albumcover/)([^"]*)(\.[^"]*)</expression>
+      </RegExp>
+      <expression noclean="1">(.+)</expression>
+    </RegExp>
+  </ParseFanartvThumb>
+  <GetAlbumThumbCAAbyRGID dest="8" clearbuffers="no">
+    <RegExp dest="8" output="&lt;details&gt;&lt;url function=&quot;ParseThumbCAA&quot; cache=&quot;mp4-\1-caathumb.xml&quot;&gt;http://musicbrainz.org/ws/2/release/\1?inc=release-groups&amp;fmt=xml&lt;/url&gt;&lt;/details&gt;" input="$$4">
+      <expression noclean="1" />
+    </RegExp>
+  </GetAlbumThumbCAAbyRGID>
+  <ParseThumbCAA dest="5" clearbuffers="no">
+    <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$20">
+      <RegExp dest="20" output="&lt;thumb&gt;http://coverartarchive.org/release-group/\1/front&lt;/thumb&gt;" input="$$1">
+        <expression noclean="1" trim="1">&lt;release-group id="([^"]*)"</expression>
+      </RegExp>
+      <RegExp dest="5" output="&lt;details&gt;\1&lt;/details&gt;" input="$$20">
+        <RegExp dest="20+" output="&lt;thumb&gt;http://coverartarchive.org/release-group/\1/front&lt;/thumb&gt;" input="$$1">
+          <expression noclean="1" trim="1">release-group (?:type="[^"]*)" id="([^"]*)"</expression>
+        </RegExp>
+        <expression noclean="1">(.+)</expression>
+      </RegExp>
+    </RegExp>
+  </ParseThumbCAA>
 </scraperfunctions>
